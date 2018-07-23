@@ -1,0 +1,6 @@
+[submodule "WARPLab-Matlab-Wrapper"]
+	path = WARPLab-Matlab-Wrapper
+	url = https://github.com/ctarver/WARPLab-Matlab-Wrapper.git
+[submodule "OFDM-Matlab"]
+	path = OFDM-Matlab
+	url = https://github.com/ctarver/OFDM-Matlab.git
