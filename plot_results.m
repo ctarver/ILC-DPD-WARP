@@ -9,17 +9,26 @@ switch type
         legend(gca,'show');
         axis([-2 2 -2 2])
         if data2
-           text(-1.75,-1.75,sprintf('EVM = %f%%', data2)); 
+            text(-1.75,-1.75,sprintf('EVM = %f%%', data2));
         end
         
     case 'psd'
         figure(100);
-        Nfft    = 1024;
-        Window  = kaiser(1000,9);
-        Signal_PSD = 10*log10(fftshift(pwelch(data,Window)));
-        plot((-1:2/Nfft:1-2/Nfft)*((data2)/(2e6)), Signal_PSD, 'LineWidth', 2, 'DisplayName', label);
-        xlabel('Frequency (MHz)')
-        ylabel('PSD')
+%         Nfft    = 1024;
+%         Window  = kaiser(1000,9);
+%         Signal_PSD = 10*log10(fftshift(pwelch(data,Window)));
+%         plot((-1:2/Nfft:1-2/Nfft)*((data2)/(2e6)), Signal_PSD, 'LineWidth', 2, 'DisplayName', label);
+%         xlabel('Frequency (MHz)')
+%         ylabel('PSD')
+%         hold on;
+%         legend(gca,'show');
+%         grid on;
+        
+        [pxx,f] = pwelch(data, [], [], 256, data2, 'maxhold','centered', 'power');
+        
+        plot(f,10*log10(pxx),'LineWidth', 0.5, 'DisplayName', label);
+        xlabel('Frequency (Hz)')
+        ylabel('PSD (dB/Hz)')
         hold on;
         legend(gca,'show');
         grid on;
@@ -63,7 +72,7 @@ switch type
     case 'ccdf'
         figure25 = figure(25);
         axes1 = axes('Parent', figure25);
-        semilogy(data, data2, 'DisplayName', label); 
+        semilogy(data, data2, 'DisplayName', label);
         xlabel('dB above average power'), ylabel('probability')
         title('CCDF'),axis([0 14 1e-5 1]), grid on
         legend(axes1,'show');
