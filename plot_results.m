@@ -24,10 +24,10 @@ switch type
 %         legend(gca,'show');
 %         grid on;
         
-        [pxx,f] = pwelch(data, [], [], 256, data2, 'maxhold','centered', 'power');
+        [pxx,f] = pwelch(data, [], [], 256, data2, 'maxhold','centered', 'psd');
         
-        plot(f,10*log10(pxx),'LineWidth', 0.5, 'DisplayName', label);
-        xlabel('Frequency (Hz)')
+        plot(f/1e6,10*log10(pxx),'LineWidth', 0.5, 'DisplayName', label);
+        xlabel('Frequency (MHz)')
         ylabel('PSD (dB/Hz)')
         hold on;
         legend(gca,'show');

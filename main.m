@@ -5,42 +5,51 @@ addpath(genpath('OFDM-Matlab'))
 addpath(genpath('WARPLab-Matlab-Wrapper'))
 addpath(genpath('Power-Amplifier-Model'))
 
-use_warp = 0;
+PA_board = 'none';      % either 'WARP', 'webRF', or 'none'
 
-nIterations = 60;
-Fs = 40e6;
+switch PA_board
+    case 'WARP'
+        warp_params.nBoards = 1;         % Number of boards
+        warp_params.RF_port  = 'A2B';    % Broadcast from RF A to RF B. Can also do 'B2A'
+        board = WARP(warp_params);
+        Fs = 40e6;    % WARP board sampling rate.
+    case 'none'
+        board = PowerAmplifier(7, 4);
+        Fs = 40e6;    % WARP board sampling rate.
+    case 'webRF'
+        board = webRF();
+        Fs = 200e6;   % webRF sampling rate.
+end
+
+nIterations = 100;
+rms_input = 0.1;
 
 %type = 'instantaneous_gain';  % Conditioning gets bad!
 type = 'linear';
 
-% Create OFDM Signal
+% Create OFDM Signsal
 ofdm_params.nSubcarriers = 600;
 ofdm_params.subcarrier_spacing = 15e3; % 15kHz subcarrier spacing
 ofdm_params.constellation = 'QPSK';
 ofdm_params.cp_length = 140; % Number of samples in cyclic prefix.
-ofdm_params.nSymbols = 20;
+ofdm_params.nSymbols = 10;
 modulator = OFDM(ofdm_params);
 tx_data = modulator.use;
-upsampled_tx_data = up_sample(tx_data, modulator.sampling_rate);
+upsampled_tx_data = up_sample(tx_data, Fs, modulator.sampling_rate);
 
 % Desired PA Output
-y_d = normalize_for_pa(upsampled_tx_data, 0.25);
-
-% Set up WARP
-if use_warp
-    warp_params.nBoards = 1;         % Number of boards
-    warp_params.RF_port  = 'A2B';    % Broadcast from RF A to RF B. Can also do 'B2A'
-    board = WARP(warp_params);
-else
-    board = PowerAmplifier(7, 4);
-end
+y_d = normalize_for_pa(upsampled_tx_data, rms_input);
 
 %% Main Learning Algorithm
 u_k = y_d; % Initial guess at tx signal.
 plot_results('psd', 'Original', u_k, Fs);
 
 for k = 1:nIterations
-    y_k = board.transmit(u_k);
+    try
+        y_k = board.transmit(u_k);
+    catch
+        break
+    end
     if k == 1
         plot_results('psd', 'No DPD', y_k, Fs);
     end
@@ -60,6 +69,7 @@ figure
 plot(test);
 ylabel('Error Magnitude')
 xlabel('Iteration')
+grid on;
 
 plot_results('psd', 'ILC Final', y_k, Fs);
 
@@ -73,10 +83,10 @@ dpd = PowerAmplifier(order, memory_depth);
 dpd = dpd.make_pa_model(y_d, u_k); % What is the PH model that gets us to the ideal PA input signal?
 
 %% Make a new signal and send through DPD
-modulator = OFDM(ofdm_params);
-tx_data = modulator.use;
-upsampled_tx_data = up_sample(tx_data, modulator.sampling_rate);
-dpd_input = normalize_for_pa(upsampled_tx_data, 0.2);
+modulator2 = OFDM(ofdm_params);
+tx_data = modulator2.use;
+upsampled_tx_data = up_sample(tx_data, Fs, modulator2.sampling_rate);
+dpd_input = normalize_for_pa(upsampled_tx_data, rms_input);
 dpd_ouput = dpd.transmit(dpd_input);
 
 with_dpd = board.transmit(dpd_ouput);
@@ -84,8 +94,8 @@ with_dpd = board.transmit(dpd_ouput);
 plot_results('psd', 'w/DPD', with_dpd, Fs);
 
 %% Some helper functions
-function out = up_sample(in, sampling_rate)
-upsample_rate = floor(40e6/sampling_rate);
+function out = up_sample(in, Fs, sampling_rate)
+upsample_rate = floor(Fs/sampling_rate);
 up = upsample(in, upsample_rate);
 b = firls(255,[0 (1/upsample_rate -0.02) (1/upsample_rate +0.02) 1],[1 1 0 0]);
 out = filter(b,1,up);
