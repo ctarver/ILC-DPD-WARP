@@ -1,7 +1,7 @@
 # ILC DPD
 I recently found a paper that was interesting:
 
-J. Chani-Cahuana, P. N. Landin, C. Fager and T. Eriksson, "Iterative Learning Control for RF Power Amplifier Linearization," in IEEE Transactions on Microwave Theory and Techniques, vol. 64, no. 9, pp. 2778-2789, Sept. 2016.
+*J. Chani-Cahuana, P. N. Landin, C. Fager and T. Eriksson, "Iterative Learning Control for RF Power Amplifier Linearization," in IEEE Transactions on Microwave Theory and Techniques, vol. 64, no. 9, pp. 2778-2789, Sept. 2016.*
 
 I made a quick simulation to test the ideas in the paper.
 
