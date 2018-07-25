@@ -30,7 +30,7 @@ To use the code, clone this repo or download the zip. Open the main.m. If you do
 To try the different ILC methods, change the `type` variable to `linear` or `instantaneous_gain`.
 
 ## Results
-The algorithm seemed to work pretty well.
+The algorithm seemed to work pretty well. The results shown below are for the linear ILC method where the gain paramtere was choosen to be 0.1.
 
 Below I have an example of the PSD and the convergence in the error norm. 
 
