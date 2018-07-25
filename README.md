@@ -33,6 +33,9 @@ To try the different ILC methods, change the `type` variable to `linear` or `ins
 The algorithm seemed to work pretty well.
 
 Below I have an example of the PSD and the convergence in the error norm. 
+
+For the PSD, three spectral plots are shown. The "No DPD" is the result after sending the desired PA output thorough the WARP board as the input. There is spectral regrowth that can be seen around the main carrier. The ILC learning is done on the PA input signal. The "ILC-final" plot is the result of sending the learned input signal through the WARP. Here we can see that there is good suppresion of the spectral regrowth. Then, the final ILC, PA input signal is used to create a 7th order, 4 memory tap, parallel hammerstein predistorter. This predistorter is used on a new, but similar, OFDM signal. The output of this generalized DPD is the "w/DPD" curve in purple. Here, the input signal has not be specially tuned to be perfect, but the predistorter derived from the ILC shows very good performance.
+
 ![psd](https://raw.githubusercontent.com/ctarver/ILC-DPD-WARP/master/Results/psd_result.png?token=ACLnMfe0UzkWZ6Ec8JeelufTWlI5Vlddks5bYeMxwA%3D%3D "PSD")
 ![error](https://raw.githubusercontent.com/ctarver/ILC-DPD-WARP/master/Results/error_norm.png?token=ACLnMQrY9Z-V2EZojvUVIhtXSqJHYVbJks5bYeNPwA%3D%3D "Error vs iteration")
 
