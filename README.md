@@ -24,6 +24,11 @@ In the paper, they have 3 versions of the ILC code: gain-based, linear, and newt
 
 To judge the progress at each iteration, I took the norm of the error vector (actual PA output - desired PA output). 
 
+## How to use this code
+To use the code, clone this repo or download the zip. Open the main.m. If you don't have a WARP board, you can change the `PA_board` variable to be `none.` This will use a 7th order parallel hammerstein PA model that is based off of a WARP board. The results with the PA model are extremely good (too good). 
+
+To try the different ILC methods, change the `type` variable to `linear` or `instantaneous_gain`.
+
 ## Results
 The algorithm seemed to work pretty well.
 
