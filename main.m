@@ -5,7 +5,7 @@ addpath(genpath('OFDM-Matlab'))
 addpath(genpath('WARPLab-Matlab-Wrapper'))
 addpath(genpath('Power-Amplifier-Model'))
 
-PA_board = 'none';      % either 'WARP', 'webRF', or 'none'
+PA_board = 'WARP';      % either 'WARP', 'webRF', or 'none'
 
 switch PA_board
     case 'WARP'
@@ -21,14 +21,14 @@ switch PA_board
         Fs = 200e6;   % webRF sampling rate.
 end
 
-nIterations = 100;
-rms_input = 0.1;
+nIterations = 50;
+rms_input = 0.22;
 
 %type = 'instantaneous_gain';  % Conditioning gets bad!
 type = 'linear';
 
 % Create OFDM Signsal
-ofdm_params.nSubcarriers = 600;
+ofdm_params.nSubcarriers = 300;
 ofdm_params.subcarrier_spacing = 15e3; % 15kHz subcarrier spacing
 ofdm_params.constellation = 'QPSK';
 ofdm_params.cp_length = 140; % Number of samples in cyclic prefix.

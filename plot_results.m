@@ -14,24 +14,24 @@ switch type
         
     case 'psd'
         figure(100);
-%         Nfft    = 1024;
-%         Window  = kaiser(1000,9);
-%         Signal_PSD = 10*log10(fftshift(pwelch(data,Window)));
-%         plot((-1:2/Nfft:1-2/Nfft)*((data2)/(2e6)), Signal_PSD, 'LineWidth', 2, 'DisplayName', label);
-%         xlabel('Frequency (MHz)')
-%         ylabel('PSD')
-%         hold on;
-%         legend(gca,'show');
-%         grid on;
-        
-        [pxx,f] = pwelch(data, [], [], 256, data2, 'maxhold','centered', 'psd');
-        
-        plot(f/1e6,10*log10(pxx),'LineWidth', 0.5, 'DisplayName', label);
+        Nfft    = 1024;
+        Window  = kaiser(1000,9);
+        Signal_PSD = 10*log10(fftshift(pwelch(data,Window)));
+        plot((-1:2/Nfft:1-2/Nfft)*((data2)/(2e6)), Signal_PSD, 'LineWidth', 0.5, 'DisplayName', label);
         xlabel('Frequency (MHz)')
-        ylabel('PSD (dB/Hz)')
+        ylabel('PSD')
         hold on;
         legend(gca,'show');
         grid on;
+        
+%         [pxx,f] = pwelch(data, [], [], 256, data2, 'maxhold','centered', 'psd');
+%         
+%         plot(f/1e6,10*log10(pxx),'LineWidth', 0.5, 'DisplayName', label);
+%         xlabel('Frequency (MHz)')
+%         ylabel('PSD (dB/Hz)')
+%         hold on;
+%         legend(gca,'show');
+%         grid on;
         
     case 'am/am'
         figure(3); hold on; grid on;
